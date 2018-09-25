@@ -38,6 +38,7 @@ path = 'C://Users//phucn//Documents//git//datatalk//datatalk//diem_thi_THPT_2018
 ### issue is to deal with csv.reader object
 
 # read with pandas
+import numpy as np
 import pandas as pd
 data = pd.read_csv(path)
 
@@ -90,5 +91,73 @@ subjects= list(data)[2:]
 all_subject_sum = [data[subject].describe().to_frame().transpose().round(1) for subject in subjects]
 all_subject_sum_df = pd.concat(all_subject_sum, axis = 0)
 all_subject_sum_df 
+
+
+
+path_hagiang = 'C://Users//phucn//Documents//git//datatalk//datatalk//diem_thi_THPT_2018//THPT_2018_Ha_Giang.csv'
+path_toanquoc = 'C://Users//phucn//Documents//git//datatalk//datatalk//diem_thi_THPT_2018//THPT_2018_Quoc_gia.csv'
+
+score_hagiang = pd.read_csv(path_hagiang)
+score_toanquoc = pd.read_csv(path_toanquoc)
+score_hagiang.head()
+score_toanquoc.head()
+
+# check if distrubtion of Ha Giang different statistically with other places
+
+# make a function to easily apply different times
+def fast_summary_score(data):    
+    subjects = list(data)[2:10]
+    all_subject_sum = [data[subject].describe().to_frame().transpose().round(1) for subject in subjects]
+    all_subject_sum_df = pd.concat(all_subject_sum, axis = 0)
+    return(all_subject_sum_df)
+
+fast_hagiang = fast_summary_score(score_hagiang)
+fast_toanquoc = fast_summary_score(score_toanquoc)
+
+fast_hagiang['mean'] - fast_toanquoc['mean']
+fast_hagiang['75%'] - fast_toanquoc['75%']
+
+# analyze via viasualization
+import matplotlib.pyplot as plt
+weights_hagiang = np.ones_like(score_hagiang['Math'].dropna())/float(len(score_hagiang['Math'].dropna()))
+n1, a1, a2 = plt.hist(x = score_hagiang['Math'][~np.isnan(score_hagiang['Math'])], bins = 50, color = 'firebrick',
+                            alpha = 0.7, rwidth = 0.85, range = [0,10], weights = weights_hagiang)
+n1
+bins
+patches
+plt.grid(axis = 'y', alpha = 0.75)
+plt.xlabel('Value', size = 40)
+plt.ylabel('Frequency', size = 40)
+plt.text(23,45, r'$\mu=15, b= 3$')
+maxfreq = n.max()
+
+#plt.ylim(ymax = np.ceil(maxfreq/10) * 10 if maxfreq % 10 else maxfreq +10)
+
+
+weights_toanquoc = np.ones_like(score_toanquoc['Math'].dropna())/float(len(score_toanquoc['Math'].dropna()))
+n, bins, patches = plt.hist(x = score_toanquoc['Math'][~np.isnan(score_toanquoc['Math'])], bins = 50, color = 'royalblue'
+                            , alpha = 0.7, rwidth = 0.85, range = [0,10], weights = weights_toanquoc)
+plt.grid(axis = 'y', alpha = 0.75)
+plt.xlabel('Value', size = 40)
+plt.ylabel('Frequency', size = 40)
+plt.text(23,45, r'$\mu=15, b= 3$')
+maxfreq = n.max()
+#plt.ylim(ymax = np.ceil(maxfreq/10) * 10 if maxfreq % 10 else maxfreq +10)
+
+
+line_up, = plt.plot([1,2,3], label='Line 2')
+line_down, = plt.plot([3,2,1], label='Line 1')
+
+
+
+
+
+
+
+
+
+
+
+
 
 
